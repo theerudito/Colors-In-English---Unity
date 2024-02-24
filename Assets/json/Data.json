@@ -1,0 +1,20 @@
+{
+  "character" : [
+    { "IdCharacter" : 1, "Name" : "Naruto", "IdClan" : 1, "IdAvatar" : 1 },
+    { "IdCharacter" : 2, "Name" : "Hinata", "IdClan" : 2, "IdAvatar" : 2 },
+    { "IdCharacter" : 3, "Name" : "Sasuke", "IdClan" : 3, "IdAvatar" : 3 },
+    { "IdCharacter" : 4, "Name" : "Sakura", "IdClan" : 4, "IdAvatar" : 4 }
+  ],
+  "clan" : [
+    { "IdClan" : 1, "Name" : "Uzumaki", "IdAvatar" : 1 },
+    { "IdClan" : 2, "Name" : "Uzumaki", "IdAvatar" : 2 },
+    { "IdClan" : 3, "Name" : "Uzumaki", "IdAvatar" : 3 },
+    { "IdClan" : 4, "Name" : "Uzumaki", "IdAvatar" : 4 }
+  ],
+  "avatar" : [
+    { "IdAvatar" : 1, "Url" : ""},
+    { "IdAvatar" : 2, "Url" : "" },
+    { "IdAvatar" : 3, "Url" : "" },
+    { "IdAvatar" : 4, "Url" : "" }
+  ]
+}
