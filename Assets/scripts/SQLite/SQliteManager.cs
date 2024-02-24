@@ -33,48 +33,7 @@ public class SQliteManager : MonoBehaviour
         _inputID = GameObject.Find("inputIdColor").GetComponent<TMP_InputField>();
         _inputColor = GameObject.Find("inputNameColor").GetComponent<TMP_InputField>();
 
-        CreateDatabase();
         GetColors();
-    }
-    public void CreateDatabase()
-    {
-        if (!File.Exists(PathManager.GetPath(fileName)))
-        {
-            try
-            {
-                FileStream fileStream = File.Create(PathManager.GetPath(fileName));
-                fileStream.Close();
-                _labelDatabase.text = "Database created";
-
-                using (var connection = new SqliteConnection($"Data Source=" + PathManager.GetPath(fileName)))
-                {
-                    connection.Open();
-
-                    var sql = "CREATE TABLE IF NOT EXISTS Color (IdColor INTEGER PRIMARY KEY, Name TEXT NOT NULL)";
-
-                    connection.Execute(sql);
-
-                    Colors.newColor.ForEach(color =>
-                    {
-                        sql = "INSERT INTO Color (Name) VALUES (@Name)";
-                        connection.Execute(sql, new { Name = color.Name });
-                    });
-
-                    connection.Close();
-
-                    Task.Delay(1000).ContinueWith(t => _labelDatabase.text = "Database: OK");
-                }
-
-            }
-            catch (Exception ex)
-            {
-                _labelDatabase.text = ex.Message.ToString();
-            }
-        }
-        else
-        {
-            _labelDatabase.text = "Database: OK";
-        }
     }
     public void GetColors()
     {
