@@ -205,7 +205,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 58988432}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1902457183}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: CheckColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1544966650}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &58988432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1110,7 +1122,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 524672317}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1902457183}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: CheckColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 539271419}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &524672317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1768,7 +1792,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 853653491}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1902457183}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: CheckColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1784067075}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &853653491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2355,7 +2391,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1392447029}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1902457183}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: CheckColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1675797371}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1392447029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3102,7 +3150,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1715794979}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1902457183}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: CheckColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1987315592}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1715794979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3651,7 +3711,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _labelDeveloper: {fileID: 566317136}
   _labelPath: {fileID: 1948440312}
-  _labelScore: {fileID: 970776232}
+  _labelScore: {fileID: 786270579}
   _labelTime: {fileID: 1178169791}
   _imageHappy: {fileID: 1684098173}
   _imageSad: {fileID: 180500568}
@@ -4179,7 +4239,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2131617192}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1902457183}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: CheckColor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1553381831}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2131617192
 MonoBehaviour:
   m_ObjectHideFlags: 0

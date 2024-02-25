@@ -9,12 +9,15 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 
-
-
 public class GameManager : MonoBehaviour
 {
     private string fileName = "Colors.db";
     private string _developer = "MADE WITH BY BETWEEN BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
+    private int _score = 0;
+    private int _points = 10;
+    private int _time = 60;
+
+
     [SerializeField] private TextMeshProUGUI _labelDeveloper;
     [SerializeField] private TextMeshProUGUI _labelPath;
     [SerializeField] private TextMeshProUGUI _labelScore;
@@ -32,7 +35,7 @@ public class GameManager : MonoBehaviour
         _labelDeveloper = GameObject.Find("textDeveloper").GetComponent<TextMeshProUGUI>();
         _labelDeveloper.text = _developer;
         _labelPath = GameObject.Find("labelPath").GetComponent<TextMeshProUGUI>();
-        _labelScore = GameObject.Find("labelScore").GetComponent<TextMeshProUGUI>();
+        _labelScore = GameObject.Find("score").GetComponent<TextMeshProUGUI>();
         _labelTime = GameObject.Find("labelTime").GetComponent<TextMeshProUGUI>();
         _imageHappy = GameObject.Find("imgHappy").GetComponent<Image>();
         _imageSad = GameObject.Find("imgSad").GetComponent<Image>();
@@ -42,7 +45,7 @@ public class GameManager : MonoBehaviour
         GenerateColors();
     }
 
-    public void CreateDatabase()
+    private void CreateDatabase()
     {
         if (!File.Exists(PathManager.GetPath(fileName)))
         {
@@ -80,19 +83,28 @@ public class GameManager : MonoBehaviour
             _labelPath.text = "DATABASE: OK";
         }
     }
-    private void CheckColor(string name)
+
+    public void CheckColor(TextMeshProUGUI color)
     {
-        using (var connection = new SqliteConnection($"Data Source=" + PathManager.GetPath(fileName)))
+        if (_labelColor.text == color.text)
         {
-            connection.Open();
-
-            var sql = "SELECT * FROM Color WHERE Name = @Name";
-
-            var color = connection.QueryFirstOrDefault<Colors>(sql, new { Name = name });
-
-            connection.Close();
+            _score += _points;
+            _labelScore.text = _score.ToString();
+            _imageHappy.gameObject.SetActive(true);
+            _imageSad.gameObject.SetActive(false);
+            _imageDefault.gameObject.SetActive(false);
+            ResetData();
+        }
+        else
+        {
+            _score -= _points;
+            _labelScore.text = _score.ToString();
+            _imageHappy.gameObject.SetActive(false);
+            _imageSad.gameObject.SetActive(true);
+            _imageDefault.gameObject.SetActive(false);
         }
     }
+
     private void GenerateColors()
     {
         using (var connection = new SqliteConnection($"Data Source=" + PathManager.GetPath(fileName)))
@@ -129,5 +141,12 @@ public class GameManager : MonoBehaviour
         return color;
     }
 
-
+    private void ResetData()
+    {
+        Task.Delay(2000);
+        _imageHappy.gameObject.SetActive(false);
+        _imageSad.gameObject.SetActive(false);
+        _imageDefault.gameObject.SetActive(true);
+        GenerateColors();
+    }
 }
