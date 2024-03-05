@@ -13,40 +13,48 @@ using System.Collections;
 public class GameManager : MonoBehaviour
 {
     private string fileName = "Colors.db";
-    private string _developer = "MADE WITH BY BETWEEN BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
+    private string _developerEN = "MADE WITH BY BETWEEN BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
+    private string _developerES = "HECHO POR ENTRE BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
     private int _score = 0;
     private int _points = 10;
-    private int _time = 30;
+    private int _time = 10;
     private float _updateInterval = 1f;
     private float _nextUpdateTime;
+    private string _language = "EN";
 
-
-    [SerializeField] private TextMeshProUGUI _labelDeveloper;
     [SerializeField] private TextMeshProUGUI _labelPath;
     [SerializeField] private TextMeshProUGUI _labelScore;
     [SerializeField] private TextMeshProUGUI _labelTime;
-    [SerializeField] private Image _imageHappy;
-    [SerializeField] private Image _imageSad;
-    [SerializeField] private Image _imageDefault;
     [SerializeField] private TextMeshProUGUI _labelColor;
+
     [SerializeField] private Button[] _buttonsColors;
     [SerializeField] private TextMeshProUGUI[] _textInButtons;
+
     [SerializeField] private AudioClip _soundCorrect;
     [SerializeField] private AudioClip _soundIncorrect;
     [SerializeField] private AudioClip _soundClock;
     [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private Sprite[] imgAvatar;
+    [SerializeField] private Sprite[] imgLanguages;
+    [SerializeField] private Sprite[] imgPremium;
 
     void Start()
     {
         CreateDatabase();
-        _labelDeveloper = GameObject.Find("textDeveloper").GetComponent<TextMeshProUGUI>();
-        _labelDeveloper.text = _developer;
+
         _labelPath = GameObject.Find("labelPath").GetComponent<TextMeshProUGUI>();
         _labelScore = GameObject.Find("score").GetComponent<TextMeshProUGUI>();
         _labelTime = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
-        _imageHappy = GameObject.Find("imgHappy").GetComponent<Image>();
-        _imageSad = GameObject.Find("imgSad").GetComponent<Image>();
-        _imageDefault = GameObject.Find("imgDefault").GetComponent<Image>();
+
+        Image _imgPro = GameObject.Find("imgPro").GetComponent<Image>();
+        _imgPro.sprite = imgPremium[1];
+
+        Image _imgLanguage = GameObject.Find("imgLanguaje").GetComponent<Image>();
+        _imgLanguage.sprite = imgLanguages[0];
+
+        Image _imageDefault = GameObject.Find("imgDefault").GetComponent<Image>();
+        _imageDefault.sprite = imgAvatar[0];
+
         _labelColor = GameObject.Find("labelColor").GetComponent<TextMeshProUGUI>();
         _audioSource = GameObject.Find("Canvas Game").GetComponent<AudioSource>();
         StartCoroutine(CountdownTimer());
@@ -94,15 +102,15 @@ public class GameManager : MonoBehaviour
 
     public void CheckColor(TextMeshProUGUI color)
     {
+        Image _imageDefault = GameObject.Find("imgDefault").GetComponent<Image>();
+
         if (_labelColor.text == color.text)
         {
             _score += _points;
             _labelScore.text = _score.ToString();
-            _imageHappy.gameObject.SetActive(true);
-            _imageSad.gameObject.SetActive(false);
-            _imageDefault.gameObject.SetActive(false);
             _audioSource.clip = _soundCorrect;
             _audioSource.Play();
+            _imageDefault.sprite = imgAvatar[1];
             StartCoroutine(CountdownTimer());
             StartCoroutine(ResetData());
         }
@@ -113,12 +121,9 @@ public class GameManager : MonoBehaviour
             else
                 _score -= _points;
             _labelScore.text = _score.ToString();
-            _imageHappy.gameObject.SetActive(false);
-            _imageSad.gameObject.SetActive(true);
-            _imageDefault.gameObject.SetActive(false);
             _audioSource.clip = _soundIncorrect;
             _audioSource.Play();
-
+            _imageDefault.sprite = imgAvatar[2];
         }
     }
 
@@ -163,13 +168,14 @@ public class GameManager : MonoBehaviour
         _buttonsColors.ToList().ForEach(btn => btn.interactable = false);
         yield return new WaitForSeconds(1f);
         _buttonsColors.ToList().ForEach(btn => btn.interactable = true);
-        _imageHappy.gameObject.SetActive(false);
-        _imageSad.gameObject.SetActive(false);
-        _imageDefault.gameObject.SetActive(true);
         GenerateColors();
         _labelTime.color = Color.white;
-        _time = 30;
+        _time = 10;
         _labelTime.text = _time.ToString();
+        _audioSource.clip = _soundClock;
+        _audioSource.Stop();
+        Image _imageDefault = GameObject.Find("imgDefault").GetComponent<Image>();
+        _imageDefault.sprite = imgAvatar[0];
         StartCoroutine(CountdownTimer());
     }
 
@@ -186,20 +192,61 @@ public class GameManager : MonoBehaviour
                 _time--;
                 _labelTime.text = _time.ToString();
 
-                if (_time == 15)
+                if (_time == 5)
                 {
                     _labelTime.color = Color.red;
                     _audioSource.clip = _soundClock;
                     _audioSource.Play();
                 }
-
                 _nextUpdateTime += _updateInterval;
             }
         }
         StartCoroutine(ResetData());
     }
-    public void LauncherURL(string url)
+
+    public void LauncherURL(string url) => Application.OpenURL(url);
+
+    public void ChangeLanguage()
     {
-        Application.OpenURL(url);
+        // PlayerPrefs.SetString("Language", language);
+        // PlayerPrefs.Save();
+        // Application.Quit();
+
+        TextMeshProUGUI _textFollow = GameObject.Find("textFollow").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI _labelDeveloper = GameObject.Find("textDeveloper").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI _textAnswer = GameObject.Find("textAnswer").GetComponent<TextMeshProUGUI>();
+        Image _imgLanguage = GameObject.Find("imgLanguaje").GetComponent<Image>();
+
+        if (_language == "EN")
+        {
+            _language = "ES";
+            _labelDeveloper.text = _developerEN;
+            _textFollow.text = "FOLLOW US";
+            _textAnswer.text = "WHAT COLOR IS";
+            _imgLanguage.sprite = imgLanguages[0];
+        }
+        else
+        {
+            _language = "EN";
+            _labelDeveloper.text = _developerES;
+            _textFollow.text = "SIGUENOS";
+            _textAnswer.text = "QUE COLOR ES";
+            _imgLanguage.sprite = imgLanguages[1];
+        }
+    }
+
+    private void ShowBanner()
+    {
+
+    }
+
+    private void GetPremium()
+    {
+
+    }
+
+    private void BuyPremium()
+    {
+
     }
 }
