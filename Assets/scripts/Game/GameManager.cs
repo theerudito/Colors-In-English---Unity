@@ -2,19 +2,16 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
-using System.IO;
-using Mono.Data.Sqlite;
-using Dapper;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using GoogleMobileAds.Api;
 
 public class GameManager : MonoBehaviour
 {
     private string fileName = "Colors.db";
-    private string _developerEN = "MADE WITH BY BETWEEN BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
-    private string _developerES = "HECHO POR ENTRE BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
+    private string _developerEN = "MADE BY BETWEEN BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
+    private string _developerES = "HECHO POR BETWEEN BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
     private int _score = 0;
     private int _points = 10;
     private int _time = 10;
@@ -40,14 +37,26 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        CreateDatabase();
+        InAppManager.Instance.OpenStore();
+
+        MobileAds.Initialize((InitializationStatus initStatus) =>
+        {
+            AdsBanner.Instance.LoadAdsBanner();
+            //AdsIntersticial.Instance.LoadAdsIntersticial();
+            AdsRewarded.Instance.LoadAdsRewarded();
+        });
+
+        InAppManager.Instance.OpenStore();
+
 
         _labelPath = GameObject.Find("labelPath").GetComponent<TextMeshProUGUI>();
         _labelScore = GameObject.Find("score").GetComponent<TextMeshProUGUI>();
         _labelTime = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
 
-        Image _imgPro = GameObject.Find("imgPro").GetComponent<Image>();
-        _imgPro.sprite = imgPremium[1];
+        _labelPath.text = "DATABASE: OK";
+
+        Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
+        btnAds.GetComponent<Image>().sprite = imgPremium[0];
 
         Image _imgLanguage = GameObject.Find("imgLanguaje").GetComponent<Image>();
         _imgLanguage.sprite = imgLanguages[0];
@@ -59,45 +68,6 @@ public class GameManager : MonoBehaviour
         _audioSource = GameObject.Find("Canvas Game").GetComponent<AudioSource>();
         StartCoroutine(CountdownTimer());
         GenerateColors();
-    }
-
-    private void CreateDatabase()
-    {
-        if (!File.Exists(PathManager.GetPath(fileName)))
-        {
-            try
-            {
-                FileStream fileStream = File.Create(PathManager.GetPath(fileName));
-                fileStream.Close();
-                _labelPath.text = "DATABASE: CREATED";
-
-                using (var connection = new SqliteConnection($"Data Source=" + PathManager.GetPath(fileName)))
-                {
-                    connection.Open();
-
-                    var sql = "CREATE TABLE IF NOT EXISTS Color (IdColor INTEGER PRIMARY KEY, Name TEXT NOT NULL, Hex TEXT NOT NULL)";
-
-                    connection.Execute(sql);
-
-                    Colors.newColor.ForEach(color =>
-                    {
-                        sql = "INSERT INTO Color (Name, Hex) VALUES (@Name, @Hex)";
-                        connection.Execute(sql, new { Name = color.Name, Hex = color.Hex });
-                    });
-
-                    connection.Close();
-                }
-                Task.Delay(2000).ContinueWith(t => _labelPath.text = "DATABASE: OK");
-            }
-            catch (Exception ex)
-            {
-                Debug.Log(ex.Message.ToString());
-            }
-        }
-        else
-        {
-            _labelPath.text = "DATABASE: OK";
-        }
     }
 
     public void CheckColor(TextMeshProUGUI color)
@@ -129,17 +99,13 @@ public class GameManager : MonoBehaviour
 
     private void GenerateColors()
     {
-        using (var connection = new SqliteConnection($"Data Source=" + PathManager.GetPath(fileName)))
+        if (_language == "ES")
         {
-            connection.Open();
+            var colorsEN = Colors.newColorEN.ToList();
 
-            var sql = "SELECT * FROM Color";
+            var colorRamdom = new System.Random().Next(1, colorsEN.Count);
 
-            var colors = connection.Query<Colors>(sql).ToList();
-
-            var colorRamdom = new System.Random().Next(1, colors.Count);
-
-            var selectColor = colors.Where(x => x.IdColor == colorRamdom).FirstOrDefault();
+            var selectColor = colorsEN.Where(x => x.IdColor == colorRamdom).FirstOrDefault();
 
             List<int> MyIndex = new List<int> { 1, 2, 3, 4, 5, selectColor.IdColor };
 
@@ -149,10 +115,29 @@ public class GameManager : MonoBehaviour
 
             for (int i = 0; i < _buttonsColors.Length; i++)
             {
-                _buttonsColors[i].GetComponent<Image>().color = GetColor(colors.Where(x => x.IdColor == MyIndex[i]).FirstOrDefault().Hex);
-                _textInButtons[i].text = colors.Where(x => x.IdColor == MyIndex[i]).FirstOrDefault().Name;
+                _buttonsColors[i].GetComponent<Image>().color = GetColor(colorsEN.Where(x => x.IdColor == MyIndex[i]).FirstOrDefault().Hex);
+                _textInButtons[i].text = colorsEN.Where(x => x.IdColor == MyIndex[i]).FirstOrDefault().Name;
             }
-            connection.Close();
+        }
+        else
+        {
+            var colorsES = Colors.newColorES.ToList();
+
+            var colorRamdom = new System.Random().Next(1, colorsES.Count);
+
+            var selectColor = colorsES.Where(x => x.IdColor == colorRamdom).FirstOrDefault();
+
+            List<int> MyIndex = new List<int> { 1, 2, 3, 4, 5, selectColor.IdColor };
+
+            MyIndex = MyIndex.OrderBy(x => new System.Random().Next()).ToList();
+
+            _labelColor.text = selectColor.Name;
+
+            for (int i = 0; i < _buttonsColors.Length; i++)
+            {
+                _buttonsColors[i].GetComponent<Image>().color = GetColor(colorsES.Where(x => x.IdColor == MyIndex[i]).FirstOrDefault().Hex);
+                _textInButtons[i].text = colorsES.Where(x => x.IdColor == MyIndex[i]).FirstOrDefault().Name;
+            }
         }
     }
 
@@ -224,6 +209,7 @@ public class GameManager : MonoBehaviour
             _textFollow.text = "FOLLOW US";
             _textAnswer.text = "WHAT COLOR IS";
             _imgLanguage.sprite = imgLanguages[0];
+            GenerateColors();
         }
         else
         {
@@ -232,6 +218,7 @@ public class GameManager : MonoBehaviour
             _textFollow.text = "SIGUENOS";
             _textAnswer.text = "QUE COLOR ES";
             _imgLanguage.sprite = imgLanguages[1];
+            GenerateColors();
         }
     }
 
@@ -240,13 +227,20 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void GetPremium()
+    public void BuyPremium()
     {
+        // Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
 
-    }
+        // if (!imgPremium[0] == btnAds.GetComponent<Image>().sprite)
+        // {
+        //     btnAds.GetComponent<Image>().sprite = imgPremium[0];
+        // }
+        // else
+        // {
+        //     btnAds.GetComponent<Image>().sprite = imgPremium[1];
+        //     btnAds.GetComponent<RectTransform>().sizeDelta = new Vector2(70, 70);
+        // }
 
-    private void BuyPremium()
-    {
-
+        InAppManager.Instance.BuyProductID("remove_ads");
     }
 }

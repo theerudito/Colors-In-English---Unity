@@ -25,6 +25,8 @@ public class SQliteManager : MonoBehaviour
     private List<Colors> _colors = new List<Colors>();
     void Start()
     {
+        CreateDatabase();
+
         _labelPath.text = $"Path: {PathManager.GetPath(fileName)}";
 
         _labelPath = GameObject.Find("labelpath").GetComponent<TextMeshProUGUI>();
@@ -35,6 +37,46 @@ public class SQliteManager : MonoBehaviour
 
         GetColors();
     }
+
+    private void CreateDatabase()
+    {
+        if (!File.Exists(PathManager.GetPath(fileName)))
+        {
+            try
+            {
+                FileStream fileStream = File.Create(PathManager.GetPath(fileName));
+                fileStream.Close();
+                _labelPath.text = "DATABASE: CREATED";
+
+                using (var connection = new SqliteConnection($"Data Source=" + PathManager.GetPath(fileName)))
+                {
+                    connection.Open();
+
+                    var sql = "CREATE TABLE IF NOT EXISTS Color (IdColor INTEGER PRIMARY KEY, Name TEXT NOT NULL, Hex TEXT NOT NULL)";
+
+                    connection.Execute(sql);
+
+                    Colors.newColorEN.ForEach(color =>
+                    {
+                        sql = "INSERT INTO Color (Name, Hex) VALUES (@Name, @Hex)";
+                        connection.Execute(sql, new { Name = color.Name, Hex = color.Hex });
+                    });
+
+                    connection.Close();
+                }
+                Task.Delay(2000).ContinueWith(t => _labelPath.text = "DATABASE: OK");
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex.Message.ToString());
+            }
+        }
+        else
+        {
+            _labelPath.text = "DATABASE: OK";
+        }
+    }
+
     public void GetColors()
     {
         ClearClones();
