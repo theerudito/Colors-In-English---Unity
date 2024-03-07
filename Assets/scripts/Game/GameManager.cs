@@ -36,10 +36,25 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite[] imgSound;
     [SerializeField] private GameObject[] _panels;
 
-
-    void Start()
+    void Awake()
     {
         InAppManager.Instance.OpenStore();
+
+        Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
+
+
+        if (PlayerPrefs.GetString("removeAds") == "true")
+        {
+            btnAds.GetComponent<Image>().sprite = imgPremium[1];
+            btnAds.GetComponent<RectTransform>().sizeDelta = new Vector2(70, 70);
+        }
+        else
+        {
+            btnAds.GetComponent<Image>().sprite = imgPremium[0];
+        }
+    }
+    void Start()
+    {
 
         MobileAds.Initialize((InitializationStatus initStatus) =>
         {
@@ -48,7 +63,6 @@ public class GameManager : MonoBehaviour
             //AdsRewarded.Instance.LoadAdsRewarded();
         });
 
-        InAppManager.Instance.OpenStore();
 
         _panels.ToList().ForEach(panel => panel.SetActive(false));
 
@@ -224,21 +238,21 @@ public class GameManager : MonoBehaviour
         _panels.FirstOrDefault(panel => panel.name == "panelConfig").SetActive(false);
     }
 
-    public void BuyPremium()
+    public void BuyPremium(string productId)
     {
-        // Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
+        InAppManager.Instance.BuyProductID(productId);
 
-        // if (!imgPremium[0] == btnAds.GetComponent<Image>().sprite)
-        // {
-        //     btnAds.GetComponent<Image>().sprite = imgPremium[0];
-        // }
-        // else
-        // {
-        //     btnAds.GetComponent<Image>().sprite = imgPremium[1];
-        //     btnAds.GetComponent<RectTransform>().sizeDelta = new Vector2(70, 70);
-        // }
+        Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
 
-        InAppManager.Instance.BuyProductID("remove_ads");
+        if (imgPremium[0] == btnAds.GetComponent<Image>().sprite)
+        {
+            btnAds.GetComponent<Image>().sprite = imgPremium[0];
+        }
+        else
+        {
+            btnAds.GetComponent<Image>().sprite = imgPremium[1];
+            //btnAds.GetComponent<RectTransform>().sizeDelta = new Vector2(70, 70);
+        }
     }
 
     public void OpenPanel(string panelName)

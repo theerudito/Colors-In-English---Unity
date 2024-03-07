@@ -104,11 +104,6 @@ public class InAppManager : MonoBehaviour, IStoreListener
         return PurchaseProcessingResult.Complete;
     }
 
-    public void btnRemoveAds(string id)
-    {
-        BuyProductID(id);
-    }
-
     public void BuyProductID(string productId)
     {
         if (IsInitialized())
@@ -119,6 +114,7 @@ public class InAppManager : MonoBehaviour, IStoreListener
             {
                 m_StoreController.InitiatePurchase(product);
                 Debug.Log("Purchasing product asynchronously: " + product.definition.id);
+                PlayerPrefs.SetString("removeAds", "true");
             }
             else
             {
@@ -131,8 +127,16 @@ public class InAppManager : MonoBehaviour, IStoreListener
         }
     }
 
-    private bool HasPurchasedNonConsumable(string productId)
+    public bool HasPurchasedNonConsumable(string productId)
     {
-        return PlayerPrefs.GetInt(productId + "_purchased", 0) == 1;
+        if (IsInitialized())
+        {
+            Product product = m_StoreController.products.WithID(productId);
+            if (product != null && product.hasReceipt)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
