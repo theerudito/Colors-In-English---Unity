@@ -7,9 +7,9 @@ using System.Linq;
 using System.Collections;
 using GoogleMobileAds.Api;
 
+
 public class GameManager : MonoBehaviour
 {
-    private string fileName = "Colors.db";
     private string _developerEN = "MADE BY BETWEEN BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
     private string _developerES = "HECHO POR BETWEEN BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
     private int _score = 0;
@@ -18,15 +18,14 @@ public class GameManager : MonoBehaviour
     private float _updateInterval = 1f;
     private float _nextUpdateTime;
     private string _language = "EN";
+    private bool _sound = true;
 
     [SerializeField] private TextMeshProUGUI _labelPath;
     [SerializeField] private TextMeshProUGUI _labelScore;
     [SerializeField] private TextMeshProUGUI _labelTime;
     [SerializeField] private TextMeshProUGUI _labelColor;
-
     [SerializeField] private Button[] _buttonsColors;
     [SerializeField] private TextMeshProUGUI[] _textInButtons;
-
     [SerializeField] private AudioClip _soundCorrect;
     [SerializeField] private AudioClip _soundIncorrect;
     [SerializeField] private AudioClip _soundClock;
@@ -34,6 +33,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite[] imgAvatar;
     [SerializeField] private Sprite[] imgLanguages;
     [SerializeField] private Sprite[] imgPremium;
+    [SerializeField] private Sprite[] imgSound;
+    [SerializeField] private GameObject _panelConfig;
+
 
     void Start()
     {
@@ -41,31 +43,30 @@ public class GameManager : MonoBehaviour
 
         MobileAds.Initialize((InitializationStatus initStatus) =>
         {
-            AdsBanner.Instance.LoadAdsBanner();
+            //AdsBanner.Instance.LoadAdsBanner();
             //AdsIntersticial.Instance.LoadAdsIntersticial();
-            AdsRewarded.Instance.LoadAdsRewarded();
+            //AdsRewarded.Instance.LoadAdsRewarded();
         });
 
         InAppManager.Instance.OpenStore();
 
+        _panelConfig = GameObject.Find("panelConfig");
+
+        _panelConfig.SetActive(false);
 
         _labelPath = GameObject.Find("labelPath").GetComponent<TextMeshProUGUI>();
         _labelScore = GameObject.Find("score").GetComponent<TextMeshProUGUI>();
         _labelTime = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
+        _labelColor = GameObject.Find("labelColor").GetComponent<TextMeshProUGUI>();
 
         _labelPath.text = "DATABASE: OK";
-
-        Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
-        btnAds.GetComponent<Image>().sprite = imgPremium[0];
-
-        Image _imgLanguage = GameObject.Find("imgLanguaje").GetComponent<Image>();
-        _imgLanguage.sprite = imgLanguages[0];
 
         Image _imageDefault = GameObject.Find("imgDefault").GetComponent<Image>();
         _imageDefault.sprite = imgAvatar[0];
 
         _labelColor = GameObject.Find("labelColor").GetComponent<TextMeshProUGUI>();
         _audioSource = GameObject.Find("Canvas Game").GetComponent<AudioSource>();
+
         StartCoroutine(CountdownTimer());
         GenerateColors();
     }
@@ -200,7 +201,7 @@ public class GameManager : MonoBehaviour
         TextMeshProUGUI _textFollow = GameObject.Find("textFollow").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI _labelDeveloper = GameObject.Find("textDeveloper").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI _textAnswer = GameObject.Find("textAnswer").GetComponent<TextMeshProUGUI>();
-        Image _imgLanguage = GameObject.Find("imgLanguaje").GetComponent<Image>();
+        Image _imgLanguage = GameObject.Find("imgLanguage").GetComponent<Image>();
 
         if (_language == "EN")
         {
@@ -222,11 +223,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void ShowBanner()
-    {
-
-    }
-
     public void BuyPremium()
     {
         // Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
@@ -242,5 +238,35 @@ public class GameManager : MonoBehaviour
         // }
 
         InAppManager.Instance.BuyProductID("remove_ads");
+    }
+
+    public void OpenConfig(bool open)
+    {
+        if (open)
+        {
+            _panelConfig.SetActive(true);
+        }
+        else
+        {
+            _panelConfig.SetActive(false);
+        }
+    }
+
+    public void Sound()
+    {
+        Image _imgSound = _panelConfig.transform.Find("imgSound").GetComponent<Image>();
+
+        if (_sound)
+        {
+            _audioSource.mute = true;
+            _imgSound.sprite = imgSound[0];
+            _sound = false;
+        }
+        else
+        {
+            _audioSource.mute = false;
+            _imgSound.sprite = imgSound[1];
+            _sound = true;
+        }
     }
 }
