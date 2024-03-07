@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite[] imgLanguages;
     [SerializeField] private Sprite[] imgPremium;
     [SerializeField] private Sprite[] imgSound;
-    [SerializeField] private GameObject _panelConfig;
+    [SerializeField] private GameObject[] _panels;
 
 
     void Start()
@@ -50,9 +50,7 @@ public class GameManager : MonoBehaviour
 
         InAppManager.Instance.OpenStore();
 
-        _panelConfig = GameObject.Find("panelConfig");
-
-        _panelConfig.SetActive(false);
+        _panels.ToList().ForEach(panel => panel.SetActive(false));
 
         _labelPath = GameObject.Find("labelPath").GetComponent<TextMeshProUGUI>();
         _labelScore = GameObject.Find("score").GetComponent<TextMeshProUGUI>();
@@ -210,6 +208,7 @@ public class GameManager : MonoBehaviour
             _textFollow.text = "FOLLOW US";
             _textAnswer.text = "WHAT COLOR IS";
             _imgLanguage.sprite = imgLanguages[0];
+
             GenerateColors();
         }
         else
@@ -221,6 +220,8 @@ public class GameManager : MonoBehaviour
             _imgLanguage.sprite = imgLanguages[1];
             GenerateColors();
         }
+
+        _panels.FirstOrDefault(panel => panel.name == "panelConfig").SetActive(false);
     }
 
     public void BuyPremium()
@@ -240,33 +241,42 @@ public class GameManager : MonoBehaviour
         InAppManager.Instance.BuyProductID("remove_ads");
     }
 
-    public void OpenConfig(bool open)
+    public void OpenPanel(string panelName)
     {
-        if (open)
+        if (panelName == "panelConfig")
         {
-            _panelConfig.SetActive(true);
+            _panels.FirstOrDefault(panel => panel.name == "panelConfig").SetActive(true);
+            _panels.FirstOrDefault(panel => panel.name == "panelInfo").SetActive(false);
         }
         else
         {
-            _panelConfig.SetActive(false);
+            _panels.FirstOrDefault(panel => panel.name == "panelConfig").SetActive(false);
+            _panels.FirstOrDefault(panel => panel.name == "panelInfo").SetActive(true);
         }
+    }
+
+    public void ClosePanel(string panelName)
+    {
+        _panels.FirstOrDefault(panel => panel.name == "panelInfo").SetActive(false);
     }
 
     public void Sound()
     {
-        Image _imgSound = _panelConfig.transform.Find("imgSound").GetComponent<Image>();
+        Image _imgSound = _panels.FirstOrDefault(panel => panel.name == "panelConfig").transform.Find("imgSound").GetComponent<Image>();
 
         if (_sound)
         {
             _audioSource.mute = true;
             _imgSound.sprite = imgSound[0];
             _sound = false;
+            _panels.FirstOrDefault(panel => panel.name == "panelConfig").SetActive(false);
         }
         else
         {
             _audioSource.mute = false;
             _imgSound.sprite = imgSound[1];
             _sound = true;
+            _panels.FirstOrDefault(panel => panel.name == "panelConfig").SetActive(false);
         }
     }
 }
