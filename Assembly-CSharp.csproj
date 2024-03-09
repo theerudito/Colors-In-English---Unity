@@ -70,6 +70,7 @@
     <Compile Include="Assets\scripts\SQLite\Colors.cs" />
     <Compile Include="Assets\scripts\Game\GameManager.cs" />
     <Compile Include="Assets\scripts\SQLite\SQliteManager.cs" />
+    <Compile Include="Assets\scripts\Game\LocalStorage.cs" />
     <Compile Include="Assets\scripts\JSON\CRUD.cs" />
     <Compile Include="Assets\scripts\Scenes\Scenes.cs" />
     <Compile Include="Assets\scripts\Game\AdsBanner.cs" />

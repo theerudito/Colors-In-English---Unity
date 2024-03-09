@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 82705933}
   - component: {fileID: 82705932}
   m_Layer: 5
-  m_Name: textInfo
+  m_Name: labelStore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,7 +426,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 34.3, y: 0.0000014305115}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &144894357
 MonoBehaviour:
@@ -1530,7 +1530,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 84.70001, y: -132.62}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &643691298
 MonoBehaviour:
@@ -2631,7 +2631,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 89.5, y: -203}
+  m_AnchoredPosition: {x: 88.600006, y: -212.62}
   m_SizeDelta: {x: 140, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1192110057
@@ -3016,7 +3016,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: panelInfo
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1510761434
@@ -3518,6 +3518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45ab5bb1faa7c6a4c88cf59a9db04ece, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOK: 0
   nonConsumableItems:
   - id: remove_ads
     title: 'Get Version Pro '
@@ -3692,8 +3693,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -35, y: 1.7}
-  m_SizeDelta: {x: 50, y: 60}
+  m_AnchoredPosition: {x: -38.8, y: 0}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1679747273
 MonoBehaviour:
@@ -3944,7 +3945,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -316.5, y: 123.2}
+  m_AnchoredPosition: {x: -315.13998, y: 117.32}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1701778115
@@ -4698,10 +4699,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4a4c661fe8067498cb678002551223, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _labelPath: {fileID: 1948440312}
-  _labelScore: {fileID: 786270579}
-  _labelTime: {fileID: 1178169791}
-  _labelColor: {fileID: 0}
+  _audioSource: {fileID: 1902457184}
+  _labels:
+  - {fileID: 1178169791}
+  - {fileID: 352276159}
+  - {fileID: 970776232}
+  - {fileID: 786270579}
+  - {fileID: 1948440312}
+  - {fileID: 774500691}
+  - {fileID: 1722927022}
+  - {fileID: 461447400}
+  - {fileID: 566317136}
+  - {fileID: 82705932}
   _buttonsColors:
   - {fileID: 1392447028}
   - {fileID: 1715794978}
@@ -4716,17 +4725,20 @@ MonoBehaviour:
   - {fileID: 1553381831}
   - {fileID: 1784067075}
   - {fileID: 1544966650}
-  _soundCorrect: {fileID: 8300000, guid: 9af8622205c37e44b923e6e1a1875880, type: 3}
-  _soundIncorrect: {fileID: 8300000, guid: 701b14a9dd50a0a4a87c6c3233743f26, type: 3}
-  _soundClock: {fileID: 8300000, guid: bc02dacd978859a48a01d4d944b8258e, type: 3}
-  _audioSource: {fileID: 1902457184}
+  _soundFiles:
+  - {fileID: 8300000, guid: 9af8622205c37e44b923e6e1a1875880, type: 3}
+  - {fileID: 8300000, guid: 701b14a9dd50a0a4a87c6c3233743f26, type: 3}
+  - {fileID: 8300000, guid: bc02dacd978859a48a01d4d944b8258e, type: 3}
+  - {fileID: 8300000, guid: fc7d5bf2de1916a499f6941497a8cb61, type: 3}
+  - {fileID: 8300000, guid: 9334d7bc58a3cf147af1efdff3f407e0, type: 3}
+  - {fileID: 8300000, guid: 47edd8748b1814843997c6eb1d6eb8ff, type: 3}
   imgAvatar:
   - {fileID: 21300000, guid: 99da5c2e1c8bf0f46807f7f54becd0d5, type: 3}
   - {fileID: 21300000, guid: cf3abec24f97e49428d4762075f7fb6c, type: 3}
   - {fileID: 21300000, guid: 75dfad2ebc9273e4fb66e034e0227aa7, type: 3}
   imgLanguages:
-  - {fileID: 21300000, guid: c4d67806b1b61464791038047c77c4d8, type: 3}
   - {fileID: 21300000, guid: 522386b262c1ffb4689f77b979477b27, type: 3}
+  - {fileID: 21300000, guid: c4d67806b1b61464791038047c77c4d8, type: 3}
   imgPremium:
   - {fileID: 21300000, guid: 026faf8aed82f1d41821aa26b39f67ef, type: 3}
   - {fileID: 21300000, guid: bc1cbc17416de1c4280ff58843784e31, type: 3}

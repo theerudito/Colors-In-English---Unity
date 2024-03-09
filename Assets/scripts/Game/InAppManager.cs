@@ -1,10 +1,12 @@
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
 public class InAppManager : MonoBehaviour, IStoreListener
 {
     public static InAppManager Instance { get; private set; }
+
 
     [Serializable]
     public class NonConsumableItem
@@ -14,6 +16,8 @@ public class InAppManager : MonoBehaviour, IStoreListener
         public string desc;
         public float price;
     }
+
+    public bool isOK = false;
 
     [SerializeField] private NonConsumableItem[] nonConsumableItems;
 
@@ -88,6 +92,7 @@ public class InAppManager : MonoBehaviour, IStoreListener
         Debug.Log("Purchase Failed" + failureReason);
     }
 
+
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs purchaseEvent)
     {
         string productId = purchaseEvent.purchasedProduct.definition.id;
@@ -95,6 +100,8 @@ public class InAppManager : MonoBehaviour, IStoreListener
         if (productId == nonConsumableItems[0].id)
         {
             Debug.Log("You have purchased the " + nonConsumableItems[0].title);
+
+            isOK = true;
         }
         else
         {
@@ -104,7 +111,8 @@ public class InAppManager : MonoBehaviour, IStoreListener
         return PurchaseProcessingResult.Complete;
     }
 
-    public void BuyProductID(string productId)
+
+    public async void BuyProductID(string productId)
     {
         if (IsInitialized())
         {
@@ -112,9 +120,10 @@ public class InAppManager : MonoBehaviour, IStoreListener
 
             if (product != null && product.availableToPurchase)
             {
+                Debug.Log(string.Format("Purchasing product asychronously: '{0}'", product.definition.id));
                 m_StoreController.InitiatePurchase(product);
-                Debug.Log("Purchasing product asynchronously: " + product.definition.id);
-                PlayerPrefs.SetString("removeAds", "true");
+                await Task.Delay(1000);
+                isOK = true;
             }
             else
             {
@@ -127,6 +136,7 @@ public class InAppManager : MonoBehaviour, IStoreListener
         }
     }
 
+
     public bool HasPurchasedNonConsumable(string productId)
     {
         if (IsInitialized())
@@ -134,9 +144,21 @@ public class InAppManager : MonoBehaviour, IStoreListener
             Product product = m_StoreController.products.WithID(productId);
             if (product != null && product.hasReceipt)
             {
+                Debug.Log("Has purchased non consumable: " + product.definition.id);
                 return true;
+            }
+            else
+            {
+                Debug.Log("Has not purchased non consumable: " + product.definition.id);
+                return false;
             }
         }
         return false;
     }
+
+    public bool SuccessfullyPurchased()
+    {
+        return isOK;
+    }
+
 }
