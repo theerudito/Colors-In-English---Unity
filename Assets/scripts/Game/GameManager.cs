@@ -6,20 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 using GoogleMobileAds.Api;
-using Unity.VisualScripting;
-
 
 public class GameManager : MonoBehaviour
 {
     private string _developerEN = "MADE BY BETWEEN BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
     private string _developerES = "HECHO POR BETWEEN BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
-    private string _premium = "remove_ads";
+    private string _premium = "premium";
     private int _score = 0;
     private int _points = 10;
     private int _time = 10;
     private float _updateInterval = 1f;
     private float _nextUpdateTime;
     private string _language = "EN";
+    private bool _flagEN = true;
     private bool _sound = true;
 
     [Header("AUDIO SOURCE")]
@@ -54,26 +53,29 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        InAppManager.Instance.OpenStore();
+        //InAppManager.Instance.OpenStore();
 
-        Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
+        // Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
 
-        if (LocalStorage.LoadKey(_premium) == true || InAppManager.Instance.HasPurchasedNonConsumable(_premium) == true)
-        {
-            btnAds.GetComponent<Image>().sprite = imgPremium[1];
-        }
-        else
-        {
-            btnAds.GetComponent<Image>().sprite = imgPremium[0];
+        // if (LocalStorage.LoadKey(_premium) == true || InAppManager.Instance.HasPurchasedNonConsumable(_premium) == true)
+        // {
+        //     LocalStorage.SaveData(_premium, _premium);
+        //     btnAds.GetComponent<Image>().sprite = imgPremium[1];
+        //     btnAds.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 40);
+        // }
+        // else
+        // {
+        //     btnAds.GetComponent<Image>().sprite = imgPremium[0];
 
-            MobileAds.Initialize((InitializationStatus initStatus) =>
-            {
-                AdsBanner.Instance.LoadAdsBanner();
-                //AdsIntersticial.Instance.LoadAdsIntersticial();
-                AdsRewarded.Instance.LoadAdsRewarded();
-            });
-        }
+        //     MobileAds.Initialize((InitializationStatus initStatus) =>
+        //     {
+        //         AdsBanner.Instance.LoadAdsBanner();
+        //         //AdsIntersticial.Instance.LoadAdsIntersticial();
+        //         AdsRewarded.Instance.LoadAdsRewarded();
+        //     });
+        // }
 
+        #region SOUND
         if (LocalStorage.LoadKey("Sound") == true)
         {
             _sound = LocalStorage.LoadData("Sound") == "ON" ? true : false;
@@ -93,7 +95,9 @@ public class GameManager : MonoBehaviour
         {
             _sound = true;
         }
+        #endregion SOUND
 
+        #region LANGUAGE
         if (LocalStorage.LoadKey("Language") == true)
         {
             _language = LocalStorage.LoadData("Language");
@@ -112,6 +116,20 @@ public class GameManager : MonoBehaviour
             _language = "EN";
             GameObject.Find("imgLanguage").GetComponent<Image>().sprite = imgLanguages[0];
         }
+        #endregion LANGUAGE
+
+        #region  SCORE
+        if (LocalStorage.LoadKey("Score") == true)
+        {
+            _score = int.Parse(LocalStorage.LoadData("Score"));
+            _labels[3].text = _score.ToString();
+        }
+        else
+        {
+            _score = 0;
+            _labels[3].text = _score.ToString();
+        }
+        #endregion SCORE
     }
 
     void Start()
@@ -153,6 +171,7 @@ public class GameManager : MonoBehaviour
         if (_labels[6].text == color.text)
         {
             _score += _points;
+            LocalStorage.SaveData("Score", _score.ToString());
             _labels[3].text = _score.ToString();
             _audioSource.clip = _soundFiles[0];
             _audioSource.Play();
@@ -166,6 +185,7 @@ public class GameManager : MonoBehaviour
                 _score = 10;
             else
                 _score -= _points;
+            LocalStorage.SaveData("Score", _score.ToString());
             _labels[3].text = _score.ToString();
             _audioSource.clip = _soundFiles[1];
             _audioSource.Play();
@@ -189,6 +209,23 @@ public class GameManager : MonoBehaviour
 
             _labels[6].text = selectColor.Name;
 
+
+            if (selectColor.Name.Length < 7)
+            {
+                _labels[6].fontSize = 60;
+            }
+            else if (selectColor.Name.Length < 10)
+            {
+                _labels[6].fontSize = 50;
+            }
+            else
+            {
+                _labels[6].fontSize = 40;
+            }
+
+
+            _flagEN = false;
+
             for (int i = 0; i < _buttonsColors.Length; i++)
             {
                 _buttonsColors[i].GetComponent<Image>().color = GetColor(colorsEN.Where(x => x.IdColor == MyIndex[i]).FirstOrDefault().Hex);
@@ -208,6 +245,21 @@ public class GameManager : MonoBehaviour
             MyIndex = MyIndex.OrderBy(x => new System.Random().Next()).ToList();
 
             _labels[6].text = selectColor.Name;
+
+            if (selectColor.Name.Length < 7)
+            {
+                _labels[6].fontSize = 60;
+            }
+            else if (selectColor.Name.Length < 10)
+            {
+                _labels[6].fontSize = 50;
+            }
+            else
+            {
+                _labels[6].fontSize = 40;
+            }
+
+            _flagEN = true;
 
             for (int i = 0; i < _buttonsColors.Length; i++)
             {
@@ -278,14 +330,17 @@ public class GameManager : MonoBehaviour
 
     public void ChangeLanguage()
     {
-
         ClickSound();
 
         Image _imgLanguage = GameObject.Find("imgLanguage").GetComponent<Image>();
 
-        if (_language == "EN")
+        if (_flagEN == true)
         {
-            _language = "ES";
+            _flagEN = false;
+            _language = "EN";
+            _labels[0].text = "TIME";
+            _labels[2].text = "SCORE";
+            _labels[4].text = "DATABASE: OK";
             _labels[5].text = "WHAT COLOR IS";
             _labels[7].text = "FOLLOW US";
             _labels[8].text = _developerEN;
@@ -295,7 +350,11 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            _language = "EN";
+            _flagEN = true;
+            _language = "ES";
+            _labels[0].text = "TIEMPO";
+            _labels[2].text = "PUNTOS";
+            _labels[4].text = "BASE DE DATOS: OK";
             _labels[5].text = "QUE COLOR ES";
             _labels[7].text = "SIGUENOS";
             _labels[8].text = _developerES;
@@ -303,11 +362,37 @@ public class GameManager : MonoBehaviour
             LocalStorage.SaveData("Language", _language);
             GenerateColors();
         }
+
         ClosePanel("panelConfig");
+    }
+
+    public void ChangeSound()
+    {
+        Image _imgSound = _panels.FirstOrDefault(panel => panel.name == "panelConfig").transform.Find("imgSound").GetComponent<Image>();
+        ClickSound();
+        if (_sound)
+        {
+            _audioSource.mute = true;
+            _imgSound.sprite = imgSound[0];
+            LocalStorage.SaveData("Sound", "OFF");
+            _sound = false;
+            ClosePanel("panelConfig");
+        }
+        else
+        {
+            _audioSource.mute = false;
+            _imgSound.sprite = imgSound[1];
+            LocalStorage.SaveData("Sound", "ON");
+            _sound = true;
+            ClosePanel("panelConfig");
+        }
     }
 
     public void BuyPremium(string productId)
     {
+        InAppManager.OnPurchaseSuccess += HandleSuccessfulPurchase;
+        InAppManager.OnPurchaseError += HandleFailedPurchase;
+
         ClickSound();
 
         Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
@@ -316,29 +401,46 @@ public class GameManager : MonoBehaviour
         {
             OpenPanel("panelInfo");
             _labels[9].text = _language == "EN" ? "YOU ARE ALREADY PREMIUM" : "YA ERES PREMIUM";
+            LocalStorage.SaveData(_premium, _premium);
             btnAds.GetComponent<Image>().sprite = imgPremium[1];
             btnAds.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 40);
             return;
         }
         else
         {
-            InAppManager.Instance.BuyProductID(productId);
-
-            OpenPanel("panelInfo");
-
-            _labels[9].text = _language == "EN" ? "WAITING FOR PAY PROCESS" : "ESPERANDO PROCESO DE PAGO";
-
-            if (InAppManager.Instance.SuccessfullyPurchased() == true)
-            {
-                _labels[9].text = _language == "EN" ? "THANKS FOR YOUR PURCHASE" : "GRACIAS POR TU COMPRA";
-                btnAds.GetComponent<Image>().sprite = imgPremium[1];
-                btnAds.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 40);
-            }
-            else
-            {
-                _labels[9].text = _language == "EN" ? "PURCHASE FAILED" : "COMPRA FALLIDA";
-            }
+            InAppManager.Instance.BuyNonConsumable(productId);
         }
+    }
+
+    void HandleSuccessfulPurchase(string productId)
+    {
+        Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
+        Debug.Log("Compra exitosa para el producto con ID: " + productId);
+        InAppManager.Instance.SetPurchaseMessage(_language == "EN" ? "THANKS FOR YOUR PURCHASE" : "GRACIAS POR TU COMPRA");
+        OpenPanel("panelInfo");
+        _labels[9].text = InAppManager.Instance.GetPurchaseMessage();
+        btnAds.GetComponent<Image>().sprite = imgPremium[1];
+        btnAds.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 40);
+        LocalStorage.SaveData(_premium, _premium);
+        OnDisable();
+        GameObject.Find("BANNER(Clone)").SetActive(false);
+    }
+
+    void HandleFailedPurchase(string productId)
+    {
+        Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
+        Debug.Log("Compra fallida para el producto con ID: " + productId);
+        InAppManager.Instance.SetPurchaseMessage(_language == "EN" ? "PURCHASE FAILED" : "COMPRA FALLIDA");
+        OpenPanel("panelInfo");
+        _labels[9].text = InAppManager.Instance.GetPurchaseMessage();
+        btnAds.GetComponent<Image>().sprite = imgPremium[0];
+        OnDisable();
+    }
+
+    void OnDisable()
+    {
+        InAppManager.OnPurchaseSuccess -= HandleSuccessfulPurchase;
+        InAppManager.OnPurchaseError -= HandleFailedPurchase;
     }
 
     public void OpenPanel(string panelName)
@@ -365,28 +467,6 @@ public class GameManager : MonoBehaviour
         {
             _panels.FirstOrDefault(panel => panel.name == panelName).SetActive(false);
             ClickSound();
-        }
-    }
-
-    public void Sound()
-    {
-        Image _imgSound = _panels.FirstOrDefault(panel => panel.name == "panelConfig").transform.Find("imgSound").GetComponent<Image>();
-        ClickSound();
-        if (_sound)
-        {
-            _audioSource.mute = true;
-            _imgSound.sprite = imgSound[0];
-            LocalStorage.SaveData("Sound", "OFF");
-            _sound = false;
-            ClosePanel("panelConfig");
-        }
-        else
-        {
-            _audioSource.mute = false;
-            _imgSound.sprite = imgSound[1];
-            LocalStorage.SaveData("Sound", "ON");
-            _sound = true;
-            ClosePanel("panelConfig");
         }
     }
 

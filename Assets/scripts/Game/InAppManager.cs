@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
@@ -16,11 +15,12 @@ public class InAppManager : MonoBehaviour, IStoreListener
         public string desc;
         public float price;
     }
-
-    public bool isOK = false;
+    private string purchaseMessage = "";
 
     [SerializeField] private NonConsumableItem[] nonConsumableItems;
-
+    public static event Action<string> OnPurchaseSuccess;
+    public static event Action<string> OnPurchaseError;
+    private static IStoreController m_StoreController;
     private void Awake()
     {
         if (Instance == null)
@@ -51,7 +51,6 @@ public class InAppManager : MonoBehaviour, IStoreListener
 
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
-
         foreach (var product in nonConsumableItems)
         {
             builder.AddProduct(product.id, ProductType.NonConsumable, new IDs
@@ -59,6 +58,7 @@ public class InAppManager : MonoBehaviour, IStoreListener
                 { product.id, GooglePlay.Name },
                 { product.id, AppleAppStore.Name },
             });
+
         }
 
         UnityPurchasing.Initialize(this, builder);
@@ -69,73 +69,72 @@ public class InAppManager : MonoBehaviour, IStoreListener
         return m_StoreController != null && m_StoreController.products != null;
     }
 
-    private static IStoreController m_StoreController;
-
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
-        Debug.Log("Store Initialized");
         m_StoreController = controller;
     }
 
     public void OnInitializeFailed(InitializationFailureReason error)
     {
-        Debug.Log("Store Initialization Failed" + error);
+        SetPurchaseMessage("Store Initialization Failed" + error);
     }
 
     public void OnInitializeFailed(InitializationFailureReason error, string message)
     {
-        Debug.Log("Store Initialization Failed" + message);
+        SetPurchaseMessage("Store Initialization Failed" + message);
     }
 
     public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
     {
-        Debug.Log("Purchase Failed" + failureReason);
+        SetPurchaseMessage("Purchase Failed" + failureReason);
+        OnPurchaseError?.Invoke(product.definition.id);
     }
-
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs purchaseEvent)
     {
-        string productId = purchaseEvent.purchasedProduct.definition.id;
+        string productId = purchaseEvent.purchasedProduct != null
+        ? purchaseEvent.purchasedProduct.definition.id
+        : "unknown_product_id";
 
-        if (productId == nonConsumableItems[0].id)
+        if (purchaseEvent.purchasedProduct == null)
         {
-            Debug.Log("You have purchased the " + nonConsumableItems[0].title);
-
-            isOK = true;
+            SetPurchaseMessage("Purchase Cancelled IAP");
+            OnPurchaseError?.Invoke(productId);
+        }
+        else if (productId == nonConsumableItems[0].id)
+        {
+            SetPurchaseMessage("Purchase Successful IAP");
+            OnPurchaseSuccess?.Invoke(productId);
         }
         else
         {
-            Debug.Log("Purchase Failed");
+            SetPurchaseMessage("Purchase Failed IAP");
+            OnPurchaseError?.Invoke(productId);
         }
 
         return PurchaseProcessingResult.Complete;
     }
 
-
-    public async void BuyProductID(string productId)
+    public void BuyNonConsumable(string productId)
     {
         if (IsInitialized())
         {
             Product product = m_StoreController.products.WithID(productId);
-
             if (product != null && product.availableToPurchase)
             {
-                Debug.Log(string.Format("Purchasing product asychronously: '{0}'", product.definition.id));
+                Debug.Log($"Attempting to purchase: {product.definition.id}");
                 m_StoreController.InitiatePurchase(product);
-                await Task.Delay(1000);
-                isOK = true;
             }
             else
             {
-                Debug.Log("BuyProductID: FAIL. Not purchasing product, either is not found or is not available for purchase");
+                Debug.Log($"Product not available for purchase: {productId}");
             }
         }
         else
         {
-            Debug.Log("BuyProductID FAIL. Not initialized.");
+            Debug.Log("Purchase initialization not complete.");
         }
     }
-
 
     public bool HasPurchasedNonConsumable(string productId)
     {
@@ -144,21 +143,20 @@ public class InAppManager : MonoBehaviour, IStoreListener
             Product product = m_StoreController.products.WithID(productId);
             if (product != null && product.hasReceipt)
             {
-                Debug.Log("Has purchased non consumable: " + product.definition.id);
+                Debug.Log($"Has purchased non consumable: {product.definition.id}");
                 return true;
             }
             else
             {
-                Debug.Log("Has not purchased non consumable: " + product.definition.id);
+                Debug.Log($"Has not purchased non consumable: {product.definition.id}");
                 return false;
             }
         }
         return false;
     }
 
-    public bool SuccessfullyPurchased()
-    {
-        return isOK;
-    }
+    public string GetPurchaseMessage() => purchaseMessage;
+
+    public void SetPurchaseMessage(string message) => purchaseMessage = message;
 
 }
