@@ -8,7 +8,7 @@ public class AdsBanner : MonoBehaviour
     private BannerView _bannerView;
 
 #if UNITY_ANDROID
-    private string _adsBanner = "ca-app-pub-3940256099942544/6300978111";
+    private string _adsBanner = "ca-app-pub-7633493507240683/8935539281";
 #else
     private string _adUnitId = "unused";
 #endif

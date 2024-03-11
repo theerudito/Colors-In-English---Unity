@@ -9,7 +9,7 @@ public class AdsRewarded : MonoBehaviour
 
 
 #if UNITY_ANDROID
-     private string _adsRewarded = "ca-app-pub-3940256099942544/5224354917";
+     private string _adsRewarded = "ca-app-pub-7633493507240683/5880348147";
 #else
   private string _adUnitId = "unused";
 #endif

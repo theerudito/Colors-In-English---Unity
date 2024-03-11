@@ -8,7 +8,7 @@ public class AdsIntersticial : MonoBehaviour
     private InterstitialAd _interstitialAd;
 
 #if UNITY_ANDROID
-    private string _adsinterstitial = "ca-app-pub-3940256099942544/1033173712";
+    private string _adsinterstitial = "ca-app-pub-7633493507240683/9141662652";
 #else
     private string _adUnitId = "unused";
 #endif
