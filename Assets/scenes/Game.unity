@@ -1520,13 +1520,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 643691296}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.42261827, w: 0.9063079}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1902457182}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -50}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 84.70001, y: -132.62}
@@ -2309,7 +2309,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c9b479795fb80844b898ad2b7ad29d35, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ebed61d2fe37a814780280aa5eb8adaa, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3927,7 +3927,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1701778114
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3994,7 +3994,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1902457183}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: BuyPremium
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4732,9 +4732,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9334d7bc58a3cf147af1efdff3f407e0, type: 3}
   - {fileID: 8300000, guid: 47edd8748b1814843997c6eb1d6eb8ff, type: 3}
   imgAvatar:
-  - {fileID: 21300000, guid: 99da5c2e1c8bf0f46807f7f54becd0d5, type: 3}
-  - {fileID: 21300000, guid: cf3abec24f97e49428d4762075f7fb6c, type: 3}
-  - {fileID: 21300000, guid: 75dfad2ebc9273e4fb66e034e0227aa7, type: 3}
+  - {fileID: 21300000, guid: a5efde4e86f83f640b3c889e0c2118fd, type: 3}
+  - {fileID: 21300000, guid: 6772ff681eea646499e466816bdab4d7, type: 3}
+  - {fileID: 21300000, guid: f475065a2209b3e49a511878670ae59b, type: 3}
   imgLanguages:
   - {fileID: 21300000, guid: 522386b262c1ffb4689f77b979477b27, type: 3}
   - {fileID: 21300000, guid: c4d67806b1b61464791038047c77c4d8, type: 3}

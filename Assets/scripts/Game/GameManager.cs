@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     private string _language = "EN";
     private bool _flagEN = true;
     private bool _sound = true;
+    private bool _isOpen = false;
 
     [Header("AUDIO SOURCE")]
     [SerializeField] private AudioSource _audioSource;
@@ -53,27 +54,29 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        //InAppManager.Instance.OpenStore();
+        _isOpen = false;
 
-        // Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
+        InAppManager.Instance.OpenStore();
 
-        // if (LocalStorage.LoadKey(_premium) == true || InAppManager.Instance.HasPurchasedNonConsumable(_premium) == true)
-        // {
-        //     LocalStorage.SaveData(_premium, _premium);
-        //     btnAds.GetComponent<Image>().sprite = imgPremium[1];
-        //     btnAds.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 40);
-        // }
-        // else
-        // {
-        //     btnAds.GetComponent<Image>().sprite = imgPremium[0];
+        Button btnAds = GameObject.Find("btnAds").GetComponent<Button>();
 
-        //     MobileAds.Initialize((InitializationStatus initStatus) =>
-        //     {
-        //         AdsBanner.Instance.LoadAdsBanner();
-        //         //AdsIntersticial.Instance.LoadAdsIntersticial();
-        //         AdsRewarded.Instance.LoadAdsRewarded();
-        //     });
-        // }
+        if (LocalStorage.LoadKey(_premium) == true || InAppManager.Instance.HasPurchasedNonConsumable(_premium) == true)
+        {
+            LocalStorage.SaveData(_premium, _premium);
+            btnAds.GetComponent<Image>().sprite = imgPremium[1];
+            btnAds.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 40);
+        }
+        else
+        {
+            btnAds.GetComponent<Image>().sprite = imgPremium[0];
+
+            MobileAds.Initialize((InitializationStatus initStatus) =>
+            {
+                AdsBanner.Instance.LoadAdsBanner();
+                //AdsIntersticial.Instance.LoadAdsIntersticial();
+                AdsRewarded.Instance.LoadAdsRewarded();
+            });
+        }
 
         #region SOUND
         if (LocalStorage.LoadKey("Sound") == true)
@@ -388,10 +391,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void BuyPremium(string productId)
+    public void BuyPremium()
     {
-        InAppManager.OnPurchaseSuccess += HandleSuccessfulPurchase;
-        InAppManager.OnPurchaseError += HandleFailedPurchase;
 
         ClickSound();
 
@@ -408,7 +409,10 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            InAppManager.Instance.BuyNonConsumable(productId);
+            InAppManager.OnPurchaseSuccess += HandleSuccessfulPurchase;
+            InAppManager.OnPurchaseError += HandleFailedPurchase;
+
+            InAppManager.Instance.BuyNonConsumable(_premium);
         }
     }
 
@@ -423,7 +427,6 @@ public class GameManager : MonoBehaviour
         btnAds.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 40);
         LocalStorage.SaveData(_premium, _premium);
         OnDisable();
-        GameObject.Find("BANNER(Clone)").SetActive(false);
     }
 
     void HandleFailedPurchase(string productId)
@@ -447,8 +450,21 @@ public class GameManager : MonoBehaviour
     {
         if (panelName == "panelConfig")
         {
-            _panels.FirstOrDefault(panel => panel.name == panelName).SetActive(true);
-            ClickSound();
+            if (_isOpen == false)
+            {
+                _panels.FirstOrDefault(panel => panel.name == panelName).SetActive(true);
+                RotateButton(true);
+                ClickSound();
+                _isOpen = true;
+            }
+            else
+            {
+                _panels.FirstOrDefault(panel => panel.name == panelName).SetActive(false);
+                ClickSound();
+                RotateButton(false);
+                _isOpen = false;
+            }
+
         }
         if (panelName == "panelInfo")
         {
@@ -458,9 +474,12 @@ public class GameManager : MonoBehaviour
 
     public void ClosePanel(string panelName)
     {
+
         if (panelName == "panelConfig")
         {
+            _isOpen = false;
             _panels.FirstOrDefault(panel => panel.name == panelName).SetActive(false);
+            RotateButton(false);
             ClickSound();
         }
         if (panelName == "panelInfo")
@@ -475,5 +494,19 @@ public class GameManager : MonoBehaviour
         _audioSource.clip = _soundFiles[3];
         _audioSource.volume = 0.5f;
         _audioSource.Play();
+    }
+
+    private void RotateButton(bool isRotate)
+    {
+        if (isRotate == true)
+        {
+            Button btnConfig = GameObject.Find("btnOpen").GetComponent<Button>();
+            btnConfig.transform.Rotate(0, 0, -40);
+        }
+        else
+        {
+            Button btnConfig = GameObject.Find("btnOpen").GetComponent<Button>();
+            btnConfig.transform.Rotate(0, 0, 40);
+        }
     }
 }
