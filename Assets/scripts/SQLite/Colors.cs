@@ -78,7 +78,7 @@ public class Colors
         new Colors { IdColor = 29, Name = "DORADO", Hex = "#FFD700" },
         new Colors { IdColor = 30, Name = "AZUL MEDIANOCHE", Hex = "#191970" },
         new Colors { IdColor = 31, Name = "CELESTE", Hex = "#87CEEB" },
-        new Colors { IdColor = 32, Name = "CREAMA", Hex = "#FFFDD0" },
+        new Colors { IdColor = 32, Name = "CREMA", Hex = "#FFFDD0" },
         new Colors { IdColor = 33, Name = "CARMESI", Hex = "#DC143C" },
     };
 }

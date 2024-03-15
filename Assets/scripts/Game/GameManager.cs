@@ -167,8 +167,10 @@ public class GameManager : MonoBehaviour
         GenerateColors();
     }
 
-    public void CheckColor(TextMeshProUGUI color)
+    public void CheckColor(int index)
     {
+        var color = _buttonsColors[index].GetComponentInChildren<TextMeshProUGUI>();
+
         Image _imageDefault = GameObject.Find("imgDefault").GetComponent<Image>();
 
         if (_labels[6].text == color.text)
@@ -179,6 +181,7 @@ public class GameManager : MonoBehaviour
             _audioSource.clip = _soundFiles[0];
             _audioSource.Play();
             _imageDefault.sprite = imgAvatar[1];
+
             StartCoroutine(CountdownTimer());
             StartCoroutine(ResetData());
         }
@@ -193,6 +196,8 @@ public class GameManager : MonoBehaviour
             _audioSource.clip = _soundFiles[1];
             _audioSource.Play();
             _imageDefault.sprite = imgAvatar[2];
+            _buttonsColors[index].interactable = false;
+            _buttonsColors[index].GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
         }
     }
 
@@ -233,6 +238,8 @@ public class GameManager : MonoBehaviour
             {
                 _buttonsColors[i].GetComponent<Image>().color = GetColor(colorsEN.Where(x => x.IdColor == MyIndex[i]).FirstOrDefault().Hex);
                 _textInButtons[i].text = colorsEN.Where(x => x.IdColor == MyIndex[i]).FirstOrDefault().Name;
+                _textInButtons[i].color = Color.white;
+                _textInButtons[i].color = new Color(0, 0, 0, 0);
             }
         }
         else
@@ -268,6 +275,7 @@ public class GameManager : MonoBehaviour
             {
                 _buttonsColors[i].GetComponent<Image>().color = GetColor(colorsES.Where(x => x.IdColor == MyIndex[i]).FirstOrDefault().Hex);
                 _textInButtons[i].text = colorsES.Where(x => x.IdColor == MyIndex[i]).FirstOrDefault().Name;
+                _textInButtons[i].color = new Color(0, 0, 0, 0);
             }
         }
     }
@@ -282,10 +290,12 @@ public class GameManager : MonoBehaviour
     private IEnumerator ResetData()
     {
         _buttonsColors.ToList().ForEach(btn => btn.interactable = false);
+        _buttonsColors.ToList().ForEach(btn => btn.GetComponentInChildren<TextMeshProUGUI>().color = Color.black);
 
         yield return new WaitForSeconds(1f);
 
         _buttonsColors.ToList().ForEach(btn => btn.interactable = true);
+        _buttonsColors.ToList().ForEach(btn => btn.GetComponentInChildren<TextMeshProUGUI>().color = new Color(0, 0, 0, 0));
 
         GenerateColors();
 
