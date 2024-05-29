@@ -7,6 +7,8 @@ public class AdsIntersticial : MonoBehaviour
     public static AdsIntersticial Instance { get; private set; }
     private InterstitialAd _interstitialAd;
 
+
+
 #if UNITY_ANDROID
     private string _adsinterstitial = "ca-app-pub-7633493507240683/9141662652";
 #else
