@@ -79,17 +79,7 @@ public class GameManager : MonoBehaviour
 
             StartCoroutine(AdsManager());
 
-            // MobileAds.Initialize((InitializationStatus initStatus) =>
-            // {
-            //     AdsBanner.Instance.LoadAdsBanner();
-            //     // //AdsIntersticial.Instance.LoadAdsIntersticial();
-            //     // AdsRewarded.Instance.LoadAdsRewarded();
-
-            //     AdsManager();
-            // });
-
         }
-
 
         #region SOUND
         if (LocalStorage.LoadKey("Sound") == true)
@@ -539,7 +529,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator AdsManager()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(10f);
 
         if (_language == "EN")
         {
@@ -570,15 +560,17 @@ public class GameManager : MonoBehaviour
 
     public void ShowAds(bool value)
     {
+        ClickSound();
 
         if (value == true)
         {
             MobileAds.Initialize((InitializationStatus initStatus) =>
                     {
                         AdsBanner.Instance.LoadAdsBanner();
-                        AdsIntersticial.Instance.LoadAdsIntersticial();
-                        //AdsRewarded.Instance.LoadAdsRewarded();
+                        //AdsIntersticial.Instance.LoadAdsIntersticial();
+                        AdsRewarded.Instance.LoadAdsRewarded();
                     });
+
             _panelUser.SetActive(false);
 
         }

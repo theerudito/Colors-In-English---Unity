@@ -84,7 +84,6 @@
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
-    <None Include="Assets\GoogleMobileAds\GoogleMobileAds_version-8.7.0_manifest.txt" />
     <None Include="Assets\GoogleMobileAds\GoogleMobileAds.Common.dll" />
     <None Include="Assets\GoogleMobileAds\GoogleMobileAds.Ump.iOS.dll" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
@@ -106,6 +105,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\GoogleMobileAds\GoogleMobileAds.Ump.dll" />
+    <None Include="Assets\GoogleMobileAds\GoogleMobileAds_version-9.1.1_manifest.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
@@ -1101,6 +1101,10 @@
     </Reference>
     <Reference Include="UnityEngine.Purchasing">
       <HintPath>Library\ScriptAssemblies\UnityEngine.Purchasing.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NuGetForUnity">
+      <HintPath>Library\ScriptAssemblies\NuGetForUnity.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PsdPlugin">

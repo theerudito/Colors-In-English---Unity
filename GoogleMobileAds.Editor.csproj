@@ -437,7 +437,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Google.PackageManagerResolver">
-      <HintPath>Assets\ExternalDependencyManager\Editor\1.2.177\Google.PackageManagerResolver.dll</HintPath>
+      <HintPath>Assets\ExternalDependencyManager\Editor\1.2.181\Google.PackageManagerResolver.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GoogleMobileAds.Common">
@@ -473,7 +473,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Google.IOSResolver">
-      <HintPath>Assets\ExternalDependencyManager\Editor\1.2.177\Google.IOSResolver.dll</HintPath>
+      <HintPath>Assets\ExternalDependencyManager\Editor\1.2.181\Google.IOSResolver.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
@@ -497,7 +497,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Google.VersionHandlerImpl">
-      <HintPath>Assets\ExternalDependencyManager\Editor\1.2.177\Google.VersionHandlerImpl.dll</HintPath>
+      <HintPath>Assets\ExternalDependencyManager\Editor\1.2.181\Google.VersionHandlerImpl.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GoogleMobileAds.Ump.Unity">
@@ -520,6 +520,10 @@
       <HintPath>Assets\dll\Mono.Data.Sqlite.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NuGetForUnity.PluginAPI">
+      <HintPath>Library\PackageCache\com.github-glitchenzo.nugetforunity@698989e164\Editor\PluginAPI\NuGetForUnity.PluginAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.2.1\Runtime\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
@@ -533,7 +537,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Google.JarResolver">
-      <HintPath>Assets\ExternalDependencyManager\Editor\1.2.177\Google.JarResolver.dll</HintPath>
+      <HintPath>Assets\ExternalDependencyManager\Editor\1.2.181\Google.JarResolver.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework">
