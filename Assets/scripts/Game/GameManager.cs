@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections;
 using GoogleMobileAds.Api;
 
+
 public class GameManager : MonoBehaviour
 {
     private string _developerEN = "MADE BY BETWEEN BYTE SOFTWARE " + "- " + DateTime.Now.Year.ToString();
@@ -52,6 +53,11 @@ public class GameManager : MonoBehaviour
     [Header("PANELS")]
     [SerializeField] private GameObject[] _panels;
 
+    [Header("PANEL USER")]
+    [SerializeField] private GameObject _panelUser;
+    [Header("BUTTONS USER")]
+    [SerializeField] private Button[] _buttonsUser;
+
     void Awake()
     {
         _isOpen = false;
@@ -68,15 +74,22 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+
             btnAds.GetComponent<Image>().sprite = imgPremium[0];
 
-            MobileAds.Initialize((InitializationStatus initStatus) =>
-            {
-                AdsBanner.Instance.LoadAdsBanner();
-                //AdsIntersticial.Instance.LoadAdsIntersticial();
-                AdsRewarded.Instance.LoadAdsRewarded();
-            });
+            StartCoroutine(AdsManager());
+
+            // MobileAds.Initialize((InitializationStatus initStatus) =>
+            // {
+            //     AdsBanner.Instance.LoadAdsBanner();
+            //     // //AdsIntersticial.Instance.LoadAdsIntersticial();
+            //     // AdsRewarded.Instance.LoadAdsRewarded();
+
+            //     AdsManager();
+            // });
+
         }
+
 
         #region SOUND
         if (LocalStorage.LoadKey("Sound") == true)
@@ -155,6 +168,8 @@ public class GameManager : MonoBehaviour
         _labels[7].text = _language == "EN" ? "FOLLOW US" : "SIGUENOS";
         _labels[8].text = _language == "EN" ? _developerEN : _developerES;
 
+
+        _panelUser.SetActive(false);
 
         _panels.ToList().ForEach(panel => panel.SetActive(false));
 
@@ -517,6 +532,59 @@ public class GameManager : MonoBehaviour
         {
             Button btnConfig = GameObject.Find("btnOpen").GetComponent<Button>();
             btnConfig.transform.Rotate(0, 0, 40);
+        }
+    }
+
+
+
+    private IEnumerator AdsManager()
+    {
+        yield return new WaitForSeconds(3f);
+
+        if (_language == "EN")
+        {
+
+            var info = _panelUser.GetComponentInChildren<Image>().GetComponentInChildren<Image>().GetComponentInChildren<TextMeshProUGUI>();
+
+            var btn1 = _buttonsUser[0].GetComponentInChildren<TMP_Text>();
+            var btn2 = _buttonsUser[1].GetComponentInChildren<TMP_Text>();
+
+            info.text = "Would you like to watch a video";
+            btn1.text = "YES";
+            btn2.text = "NO";
+        }
+        else
+        {
+            var info = _panelUser.GetComponentInChildren<Image>().GetComponentInChildren<Image>().GetComponentInChildren<TextMeshProUGUI>();
+
+            var btn1 = _buttonsUser[0].GetComponentInChildren<TMP_Text>();
+            var btn2 = _buttonsUser[1].GetComponentInChildren<TMP_Text>();
+
+            info.text = "Deseas ver un video";
+            btn1.text = "SI";
+            btn2.text = "NO";
+
+        }
+        _panelUser.SetActive(true);
+    }
+
+    public void ShowAds(bool value)
+    {
+
+        if (value == true)
+        {
+            MobileAds.Initialize((InitializationStatus initStatus) =>
+                    {
+                        AdsBanner.Instance.LoadAdsBanner();
+                        AdsIntersticial.Instance.LoadAdsIntersticial();
+                        //AdsRewarded.Instance.LoadAdsRewarded();
+                    });
+            _panelUser.SetActive(false);
+
+        }
+        else
+        {
+            _panelUser.SetActive(false);
         }
     }
 }
